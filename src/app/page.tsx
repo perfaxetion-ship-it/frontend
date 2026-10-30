@@ -24,7 +24,6 @@ import {
   resolveStadium,
   runAnalysis,
   sendTelegramMessage,
-  API_BASE_URL,
 } from "@/lib/api";
 
 const TOP_STADIUMS = [
@@ -262,14 +261,9 @@ export default function Home() {
             {backendStatus.ok ? `Canlı Backend (${backendStatus.stadiums} Stadyum)` : "Backend Bağlanıyor..."}
           </div>
 
-          <a
-            href={`${API_BASE_URL}/docs`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 px-2.5 py-1 text-xs rounded bg-[#1e293b] text-slate-300 hover:text-white border border-slate-700 transition"
-          >
-            API <ExternalLink className="w-3 h-3" />
-          </a>
+          <div className="px-2.5 py-1 text-xs rounded bg-[#1e293b] text-slate-300 border border-slate-700">
+            Regiomontanus v2.1
+          </div>
         </div>
       </header>
 

@@ -1,11 +1,12 @@
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://wjd2z94oda.apps.bot-hosting.cloud";
-
-export const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "astro-secret-change-me";
+/**
+ * Güvenli API İstemcisi:
+ * Gerçek backend adresi ve API Key tarayıcıya açık edilmez;
+ * İstekler Vercel Next.js Server Route Handler (/api/...) üzerinden güvenle tünellenir.
+ */
 
 export async function checkBackendHealth(): Promise<{ ok: boolean; stadiums: number }> {
   try {
-    const res = await fetch(`${API_BASE_URL}/health`, { cache: "no-store" });
+    const res = await fetch("/api/health", { cache: "no-store" });
     if (!res.ok) return { ok: false, stadiums: 0 };
     const data = await res.json();
     return { ok: data.status === "ok", stadiums: data.stadiums || 0 };
@@ -16,31 +17,11 @@ export async function checkBackendHealth(): Promise<{ ok: boolean; stadiums: num
 
 export async function resolveStadium(team: string): Promise<any | null> {
   try {
-    const res = await fetch(
-      `${API_BASE_URL}/api/v1/stadiums/resolve?team=${encodeURIComponent(team)}&online=true`,
-      {
-        headers: { "X-API-Key": API_KEY },
-      }
-    );
+    const res = await fetch(`/api/stadiums/resolve?team=${encodeURIComponent(team)}`);
     if (!res.ok) return null;
     return res.json();
   } catch {
     return null;
-  }
-}
-
-export async function searchStadiums(query: string): Promise<any[]> {
-  try {
-    const res = await fetch(
-      `${API_BASE_URL}/api/v1/stadiums/search?q=${encodeURIComponent(query)}&limit=15`,
-      {
-        headers: { "X-API-Key": API_KEY },
-      }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
   }
 }
 
@@ -73,11 +54,10 @@ export async function runAnalysis(params: {
     payload.lon = params.lon;
   }
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/analysis`, {
+  const res = await fetch("/api/analyze", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-Key": API_KEY,
     },
     body: JSON.stringify(payload),
   });
@@ -96,17 +76,13 @@ export async function sendTelegramMessage(params: {
   message_type?: string;
 }): Promise<{ sent: boolean; info?: string }> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/v1/telegram/send`, {
+    const res = await fetch("/api/analyze", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-Key": API_KEY,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params),
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: "Telegram gönderilemedi." }));
-      return { sent: false, info: err.detail };
+      return { sent: false, info: "Telegram servisine erişilemedi." };
     }
     return { sent: true };
   } catch (e: any) {

@@ -136,3 +136,4 @@ export default function AstroWheel({ homeTeam, awayTeam, ascSign }: AstroWheelPr
     </div>
   );
 }
+
