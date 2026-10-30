@@ -51,3 +51,4 @@ export interface Stadium {
   lat: number;
   lon: number;
 }
+

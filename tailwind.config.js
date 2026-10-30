@@ -9,12 +9,16 @@ module.exports = {
     extend: {
       colors: {
         astro: {
-          dark: "#080c16",
-          card: "#0f172a",
-          border: "#1e293b",
-          cyan: "#00f0ff",
-          purple: "#a855f7",
-          gold: "#eab308",
+          bg: "#0b1120",
+          panel: "#111827",
+          card: "#1e293b",
+          input: "#0f172a",
+          border: "#334155",
+          gold: "#f59e0b",
+          green: "#10b981",
+          blue: "#3b82f6",
+          purple: "#8b5cf6",
+          red: "#ef4444",
         },
       },
     },

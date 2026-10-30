@@ -15,3 +15,4 @@ Spor Astrolojisi ve Yapay Zeka Maç Analiz Platformu Ön Yüzü.
 
 ## Vercel'e Dağıtım
 Bu depoyu doğrudan Vercel hesabınıza bağlayıp tek tıkla canlıya alabilirsiniz!
+

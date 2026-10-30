@@ -1,7 +1,7 @@
-import { AnalysisResponse, Stadium } from "@/types";
-
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://wjd2z94oda.apps.bot-hosting.cloud";
+
+export const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "astro-secret-change-me";
 
 export async function checkBackendHealth(): Promise<{ ok: boolean; stadiums: number }> {
   try {
@@ -14,22 +14,72 @@ export async function checkBackendHealth(): Promise<{ ok: boolean; stadiums: num
   }
 }
 
+export async function resolveStadium(team: string): Promise<any | null> {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/v1/stadiums/resolve?team=${encodeURIComponent(team)}&online=true`,
+      {
+        headers: { "X-API-Key": API_KEY },
+      }
+    );
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function searchStadiums(query: string): Promise<any[]> {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/v1/stadiums/search?q=${encodeURIComponent(query)}&limit=15`,
+      {
+        headers: { "X-API-Key": API_KEY },
+      }
+    );
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
 export async function runAnalysis(params: {
   home_team: string;
   away_team: string;
   match_date: string;
   match_time: string;
   stadium_name?: string;
+  city?: string;
+  lat?: number;
+  lon?: number;
   house_system?: string;
   send_telegram?: boolean;
-}): Promise<AnalysisResponse> {
+}): Promise<any> {
+  const payload: any = {
+    home_team: params.home_team,
+    away_team: params.away_team,
+    date: params.match_date,
+    time: params.match_time,
+    stadium: params.stadium_name,
+    city: params.city,
+    house_system: params.house_system || "Regiomontanus",
+    send_telegram: !!params.send_telegram,
+    allow_online_lookup: true,
+  };
+
+  if (typeof params.lat === "number" && typeof params.lon === "number") {
+    payload.lat = params.lat;
+    payload.lon = params.lon;
+  }
+
   const res = await fetch(`${API_BASE_URL}/api/v1/analysis`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-Key": process.env.NEXT_PUBLIC_API_KEY || "astro-secret-change-me",
+      "X-API-Key": API_KEY,
     },
-    body: JSON.stringify(params),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -40,17 +90,26 @@ export async function runAnalysis(params: {
   return res.json();
 }
 
-export async function getRecentAnalyses(): Promise<any[]> {
+export async function sendTelegramMessage(params: {
+  analysis_id: number;
+  chat_id?: string;
+  message_type?: string;
+}): Promise<{ sent: boolean; info?: string }> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/v1/analysis?limit=10`, {
+    const res = await fetch(`${API_BASE_URL}/api/v1/telegram/send`, {
+      method: "POST",
       headers: {
-        "X-API-Key": process.env.NEXT_PUBLIC_API_KEY || "astro-secret-change-me",
+        "Content-Type": "application/json",
+        "X-API-Key": API_KEY,
       },
-      cache: "no-store",
+      body: JSON.stringify(params),
     });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: "Telegram gönderilemedi." }));
+      return { sent: false, info: err.detail };
+    }
+    return { sent: true };
+  } catch (e: any) {
+    return { sent: false, info: e.message };
   }
 }
