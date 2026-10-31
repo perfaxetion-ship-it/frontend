@@ -38,6 +38,9 @@ export interface Predictions {
     category: string;
     reason: string;
   }>;
+  betting_matrix_text?: string;
+  advanced_quant?: Record<string, any>;
+  advanced_quant_text?: string;
   xg: {
     home: number;
     away: number;
