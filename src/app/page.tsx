@@ -602,6 +602,31 @@ export default function Home() {
             </div>
           </div>
 
+          {/* %90+ SÜPER BANKO KASA TERCİHLERİ BANNERI */}
+          {analysisData?.predictions?.banko_picks && analysisData.predictions.banko_picks.length > 0 && (
+            <div className="bg-gradient-to-r from-amber-950/50 via-amber-900/40 to-amber-950/50 border border-amber-500/60 rounded-lg p-2.5 shadow-lg flex flex-col md:flex-row items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🌟</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-amber-400 tracking-wide uppercase">
+                      %90+ SÜPER BANKO (KASA KATLAMA TERCİHİ)
+                    </span>
+                    <span className="bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                      %{analysisData.predictions.banko_picks[0].prob_pct} İhtimal
+                    </span>
+                  </div>
+                  <p className="text-sm font-bold text-white mt-0.5">
+                    💎 {analysisData.predictions.banko_picks[0].market}
+                  </p>
+                </div>
+              </div>
+              <p className="text-[11px] text-amber-200/80 italic max-w-md text-right hidden md:block">
+                ↳ {analysisData.predictions.banko_picks[0].reason}
+              </p>
+            </div>
+          )}
+
           {/* Sekmeler (Notebook Tabs Header) */}
           <div className="flex border-b border-slate-700 bg-[#111827] rounded-t-lg px-2 pt-1.5 gap-1 overflow-x-auto text-xs font-bold">
             {[

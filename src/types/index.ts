@@ -30,6 +30,14 @@ export interface Predictions {
   goal_reasons?: string[];
   goal_probabilities?: Record<string, number>;
   exact_scores: string;
+  banko_picks?: Array<{
+    market: string;
+    short_market: string;
+    prob_pct: number;
+    tier: string;
+    category: string;
+    reason: string;
+  }>;
   xg: {
     home: number;
     away: number;
