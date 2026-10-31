@@ -27,6 +27,8 @@ export interface Predictions {
   corners_by_team: string;
   corner_reasons: string[];
   goals: string;
+  goal_reasons?: string[];
+  goal_probabilities?: Record<string, number>;
   exact_scores: string;
   xg: {
     home: number;

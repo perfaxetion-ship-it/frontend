@@ -214,7 +214,13 @@ export default function Home() {
 
   const msCode = analysisData?.predictions?.ms_code || "MS 1";
   const htGoal = analysisData?.predictions?.half_time_goal || "İY Gol VAR";
-  const htGoalShort = htGoal.includes("VAR") ? "İY Gol VAR" : "İY Gol YOK";
+  const htGoalShort = htGoal.includes("GOL YOK")
+    ? "İY Gol YOK (0-0)"
+    : htGoal.includes("RİSKLİ")
+    ? "İY 0.5Ü Riskli"
+    : htGoal.includes("VAR")
+    ? "İY Gol VAR"
+    : "İY 0.5 Belirsiz";
   const exactScores = analysisData?.predictions?.exact_scores || "2-1 | 1-1";
   const corners = analysisData?.predictions?.corners || "Korner 9.5 ÜST";
   const cornerShort = corners.includes("YÜKSEK")
